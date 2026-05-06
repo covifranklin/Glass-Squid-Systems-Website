@@ -681,7 +681,54 @@ p{margin:0;}
   .system-card, .system-card.wide, .system-card.wider{grid-column: span 1;}
   .process{grid-template-columns:1fr 1fr;}
   .nav-links{display:none;}
+  .nav-cta{display:none;}
+  .nav-hamburger{display:flex;}
 }
+
+/* ---------- mobile nav ---------- */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  background:none; border:none;
+  cursor:pointer;
+  padding:6px 4px;
+  margin-left:auto;
+  flex:0 0 auto;
+}
+.nav-hamburger span{
+  display:block;
+  width:22px; height:1.5px;
+  background:var(--ink);
+  transition: transform .3s ease, opacity .3s ease;
+  transform-origin: center;
+}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+.nav-mobile{
+  display:none;
+  border-top:1px solid var(--line);
+  padding:20px 40px 28px;
+  background:rgba(243,236,216,.97);
+  backdrop-filter:blur(14px) saturate(120%);
+}
+.nav-mobile.open{display:block;}
+.nav-mobile ul{
+  list-style:none; padding:0; margin:0 0 20px;
+}
+.nav-mobile ul li{
+  border-bottom:1px solid var(--line);
+}
+.nav-mobile ul a{
+  display:block;
+  padding:15px 0;
+  color:var(--ink); text-decoration:none;
+  font-size:20px; font-weight:300; letter-spacing:-.01em;
+}
+.nav-mobile ul a:hover{color:var(--teal);}
 </style>
 </head>
 <body>
@@ -717,6 +764,18 @@ p{margin:0;}
     <div class="nav-cta">
       <a class="btn" href="#contact">Book a consultation <span class="arrow">→</span></a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile" aria-hidden="true">
+    <ul>
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#founder">Founder</a></li>
+    </ul>
+    <a class="btn" href="#contact">Book a consultation <span class="arrow">→</span></a>
   </div>
 </nav>
 
@@ -1562,6 +1621,31 @@ p{margin:0;}
 })();
 </script>
 
+
+<script>
+  (function(){
+    const btn = document.getElementById('navHamburger');
+    const menu = document.getElementById('navMobile');
+    function close(){
+      btn.classList.remove('open');
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+      menu.setAttribute('aria-hidden','true');
+    }
+    btn.addEventListener('click', function(){
+      const isOpen = menu.classList.contains('open');
+      isOpen ? close() : (
+        btn.classList.add('open'),
+        menu.classList.add('open'),
+        btn.setAttribute('aria-expanded','true'),
+        menu.setAttribute('aria-hidden','false')
+      );
+    });
+    menu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', close);
+    });
+  })();
+</script>
 
 <script>
   window.formspree = window.formspree || function(){ (formspree.q = formspree.q || []).push(arguments); };
