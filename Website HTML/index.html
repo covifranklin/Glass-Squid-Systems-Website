@@ -1,0 +1,1592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Glass Squid Systems — AI systems you can actually rely on</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="Glass Squid Systems — bespoke AI agent systems designed to be transparent, governable, and built to deliver. Custom AI systems for NGOs, SMEs, and mission-driven teams."/>
+<style>
+:root{
+  --cream:#f3ecd8;
+  --cream-2:#ebe2c8;
+  --cream-3:#e3d8b7;
+  --ink:#0b1a1f;
+  --ink-2:#14262c;
+  --teal:#0f3d3e;
+  --teal-2:#1d5456;
+  --seaglass:#9ec9c2;
+  --seaglass-2:#c7ded9;
+  --muted:#6a7775;
+  --line:rgba(11,26,31,.16);
+  --line-2:rgba(11,26,31,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);}
+body{
+  font-family:'Work Sans', sans-serif;
+  font-weight:300;
+  font-size:16px;
+  line-height:1.6;
+  letter-spacing:.005em;
+  -webkit-font-smoothing:antialiased;
+  background: var(--cream);
+  position:relative;
+}
+
+/* Slow drifting seaglass haze — site-wide ambient background */
+.ambient{
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.ambient .blob{
+  position:absolute;
+  border-radius:50%;
+  filter: blur(90px);
+  mix-blend-mode: multiply;
+  opacity:.85;
+  will-change: transform;
+}
+.ambient .b1{
+  width:900px; height:900px;
+  top:-280px; right:-200px;
+  background: radial-gradient(circle, rgba(158,201,194,.55) 0%, rgba(158,201,194,0) 65%);
+  animation: drift1 32s ease-in-out infinite alternate;
+}
+.ambient .b2{
+  width:700px; height:700px;
+  top:30%; left:-220px;
+  background: radial-gradient(circle, rgba(199,222,217,.65) 0%, rgba(199,222,217,0) 65%);
+  animation: drift2 40s ease-in-out infinite alternate;
+}
+.ambient .b3{
+  width:620px; height:620px;
+  top:62%; right:-120px;
+  background: radial-gradient(circle, rgba(29,84,86,.28) 0%, rgba(29,84,86,0) 65%);
+  animation: drift3 48s ease-in-out infinite alternate;
+}
+.ambient .b4{
+  width:540px; height:540px;
+  top:95%; left:30%;
+  background: radial-gradient(circle, rgba(158,201,194,.5) 0%, rgba(158,201,194,0) 65%);
+  animation: drift4 56s ease-in-out infinite alternate;
+}
+@keyframes drift1{
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(-80px,120px) scale(1.08); }
+  100% { transform: translate(40px,220px) scale(.95); }
+}
+@keyframes drift2{
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(180px,-60px) scale(1.1); }
+  100% { transform: translate(80px,160px) scale(.96); }
+}
+@keyframes drift3{
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(-140px,-120px) scale(1.06); }
+  100% { transform: translate(60px,80px) scale(1.02); }
+}
+@keyframes drift4{
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(200px,-80px) scale(1.05); }
+  100% { transform: translate(-80px,-180px) scale(.98); }
+}
+@media (prefers-reduced-motion: reduce){
+  .ambient .blob{animation:none;}
+}
+body > *:not(.ambient){position:relative; z-index:1;}
+
+/* ---------- typography ---------- */
+.mono{font-family:'JetBrains Mono', monospace; font-weight:400;}
+.eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.28em;
+  color:var(--teal);
+  font-weight:400;
+}
+.serif{font-family:'Instrument Serif', serif; font-weight:400; font-style:italic;}
+h1,h2,h3,h4{font-family:'Work Sans', sans-serif; font-weight:300; letter-spacing:-.015em; margin:0;}
+h1{font-size:clamp(44px, 5.6vw, 88px); line-height:1.02;}
+h2{font-size:clamp(32px, 3.4vw, 52px); line-height:1.1;}
+h3{font-size:22px; line-height:1.25; letter-spacing:-.01em;}
+p{margin:0;}
+
+/* ---------- system diagram ---------- */
+.sys-diagram{width:100%; height:100%;}
+.sys-diagram .node rect{transition: fill .3s ease, stroke-width .3s ease;}
+.sys-diagram .flow-pulse{filter: drop-shadow(0 0 6px rgba(158,201,194,.9));}
+.sys-diagram .gate rect{animation: gatePulse 4s ease-in-out infinite;}
+@keyframes gatePulse{
+  0%,100%{stroke-width:1.4;}
+  50%{stroke-width:1.8;}
+}
+.squid-stage:hover .sys-diagram .node rect{opacity:.9;}
+
+/* ---------- founder ---------- */
+.founder{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  gap:64px;
+  align-items:center;
+  padding:24px 0;
+}
+.founder-portrait .portrait-frame{
+  width:100%;
+  aspect-ratio: 5 / 6;
+  background:var(--cream-2);
+  border:1px solid var(--line);
+  overflow:hidden;
+  position:relative;
+}
+.founder-portrait svg{width:100%; height:100%; display:block;}
+.founder-portrait img{
+  width:100%; height:100%;
+  object-fit:cover;
+  object-position: 62% 58%;
+  display:block;
+  filter: saturate(.92) contrast(1.02);
+}
+.founder-portrait .portrait-frame::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(11,26,31,0) 60%, rgba(11,26,31,.18) 100%);
+  pointer-events:none;
+}
+.founder-copy .founder-bio{
+  font-size:16px;
+  line-height:1.65;
+  color:var(--ink-2);
+  max-width:58ch;
+  margin-top:16px;
+}
+@media (max-width: 1000px){
+  .founder{grid-template-columns:1fr; gap:32px;}
+  .founder-portrait{max-width:220px;}
+}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1280px; margin:0 auto; padding:0 40px;}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:40;
+  backdrop-filter: blur(14px) saturate(120%);
+  background: rgba(243,236,216,.72);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  display:flex; align-items:center; gap:36px;
+  padding:18px 40px;
+  max-width:1280px; margin:0 auto;
+}
+.brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink);}
+.brand-mark{width:28px; height:28px; flex:0 0 auto;}
+.brand-name{
+  font-family:'Instrument Serif', serif;
+  font-size:22px;
+  letter-spacing:.01em;
+  font-weight:400;
+}
+.nav-links{display:flex; gap:32px; margin-left:28px; list-style:none; padding:0;}
+.nav-links a{
+  color:var(--ink); text-decoration:none;
+  font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+  font-weight:400;
+  padding:6px 0;
+  position:relative;
+}
+.nav-links a:hover::after{
+  content:""; position:absolute; left:0; right:0; bottom:0;
+  height:1px; background:var(--teal);
+}
+.nav-cta{margin-left:auto; display:flex; align-items:center; gap:18px;}
+.nav-meta{font-size:12px; color:var(--muted); letter-spacing:.04em;}
+
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:12px 22px;
+  background:var(--teal); color:var(--cream);
+  text-decoration:none; border:1px solid var(--teal);
+  font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+  font-weight:400;
+  transition:all .3s ease;
+}
+.btn:hover{background:var(--ink); border-color:var(--ink);}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line-2);}
+.btn.ghost:hover{background:var(--ink); color:var(--cream); border-color:var(--ink);}
+.btn .arrow{display:inline-block; transition:transform .3s ease;}
+.btn:hover .arrow{transform:translateX(4px);}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  padding:64px 0 80px;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  max-width: 920px;
+  margin: 0 auto;
+  position:relative;
+  z-index:2;
+}
+.hero-kicker{display:flex; align-items:center; gap:14px; margin-bottom:32px;}
+.hero-kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--teal);}
+.hero h1{margin-top:8px;}
+.hero h1 .serif{color:var(--teal);}
+.hero .lead{
+  font-size:19px;
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:52ch;
+  margin-top:36px;
+  font-weight:300;
+}
+.hero-ctas{display:flex; gap:14px; align-items:center; margin-top:40px;}
+.hero-ctas .note{font-size:13px; color:var(--muted); letter-spacing:.04em;}
+
+/* squid motif */
+.squid-stage{
+  position:relative;
+  aspect-ratio: 1 / 1.1;
+  width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+.squid-stage svg{width:100%; height:100%;}
+.squid-caption{
+  position:absolute; bottom:-6px; right:8px;
+  font-family:'Instrument Serif', serif; font-style:italic;
+  font-size:15px; color:var(--muted);
+  letter-spacing:.02em;
+}
+
+/* floating background texture shapes */
+.bg-layer{position:absolute; inset:0; pointer-events:none; z-index:1;}
+.bg-shape{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, rgba(158,201,194,.45), rgba(158,201,194,0) 70%);
+  filter:blur(6px);
+  mix-blend-mode: multiply;
+}
+
+/* small dataline */
+.hero-meta{
+  display:flex; gap:48px; margin-top:72px;
+  padding-top:28px; border-top:1px solid var(--line);
+  position:relative; z-index:2;
+}
+.hero-meta > div{flex:1;}
+.hero-meta .k{font-size:12px; color:var(--muted); letter-spacing:.2em; text-transform:uppercase;}
+.hero-meta .v{font-size:16px; color:var(--ink); margin-top:6px; font-weight:400;}
+.hero-meta .v em{font-family:'Instrument Serif', serif; font-style:italic; color:var(--teal); font-weight:400;}
+
+/* ---------- section scaffolding ---------- */
+.section{padding:88px 0; position:relative;}
+.section.tight{padding:64px 0;}
+.section.dark{
+  background:var(--ink);
+  color:var(--cream);
+}
+.section.dark .eyebrow{color:var(--seaglass);}
+.section.dark h2, .section.dark h3, .section.dark p{color:var(--cream);}
+.section-head{
+  display:grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap:80px;
+  margin-bottom:72px;
+  align-items:end;
+}
+.section-head.center{grid-template-columns:1fr; text-align:center; justify-items:center;}
+.section-head h2 .serif{color:var(--teal);}
+.section.dark .section-head h2 .serif{color:var(--seaglass);}
+.section-head .sub{
+  font-size:17px; color:var(--ink-2); max-width:52ch; line-height:1.55;
+}
+.section.dark .section-head .sub{color:rgba(243,236,216,.75);}
+
+/* ---------- thesis / what we're not ---------- */
+.thesis{
+  display:grid; grid-template-columns: 1fr 1fr; gap:0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.thesis > div{
+  padding:56px 48px;
+}
+.thesis > div:first-child{border-right:1px solid var(--line);}
+.thesis > div.thesis-mission{
+  grid-column: 1 / -1;
+  border-top:1px solid var(--line);
+  border-right:none;
+  padding:64px 14% 72px;
+  text-align:center;
+  background: linear-gradient(180deg, rgba(158,201,194,.08) 0%, transparent 100%);
+}
+.thesis > div.thesis-mission .quote,
+.thesis > div.thesis-mission p{margin-left:auto; margin-right:auto;}
+.thesis > div.thesis-mission p{max-width:62ch;}
+.thesis .tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+.thesis .quote{
+  font-family:'Instrument Serif', serif;
+  font-style:italic;
+  font-size:28px;
+  line-height:1.35;
+  color:var(--ink);
+  letter-spacing:-.005em;
+}
+.thesis .quote em{color:var(--teal); font-style:italic;}
+.thesis p{margin-top:24px; color:var(--ink-2); font-size:15.5px; max-width:46ch;}
+
+/* ---------- pillars (4 properties) ---------- */
+.pillars{
+  display:grid; grid-template-columns: repeat(4, 1fr);
+  gap:0;
+  border:1px solid var(--line);
+  background:var(--cream);
+}
+.pillars.pillars-5{ grid-template-columns: repeat(5, 1fr); }
+.pillar{
+  padding:40px 28px 44px;
+  border-right:1px solid var(--line);
+  position:relative;
+  transition: background .3s ease;
+  display:flex; flex-direction:column;
+  align-items:flex-start;
+}
+.pillar:last-child{border-right:none;}
+.pillar:hover{background:var(--cream-2);}
+.pillar-icon{
+  width:40px; height:40px;
+  margin:0 0 24px;
+  color:var(--teal);
+  display:block;
+  flex:0 0 40px;
+}
+.pillar h3{
+  font-size:22px; font-weight:300; letter-spacing:-.01em;
+  min-height:30px;
+  display:flex; align-items:center;
+  margin:0;
+}
+.pillar h3 .serif{color:var(--teal); font-size:24px;}
+.pillar p{margin-top:14px; font-size:14px; line-height:1.55; color:var(--ink-2);}
+
+/* ---------- failure modes ---------- */
+.failures{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.failure{
+  padding:38px 26px 34px;
+  border-right:1px solid var(--line);
+  position:relative;
+  transition: background .3s ease;
+}
+.failure:last-child{border-right:none;}
+.failure:hover{background:var(--cream-2);}
+.failure .x{
+  font-family:'Instrument Serif', serif; font-style:italic;
+  font-size:30px; color:var(--teal); line-height:1; margin-bottom:18px;
+}
+.failure h4{
+  font-size:17px; font-weight:400; letter-spacing:-.005em;
+  line-height:1.3; color:var(--ink);
+}
+.failure p{
+  margin-top:10px; font-size:13.5px; line-height:1.55; color:var(--ink-2);
+}
+.failures-closer{
+  margin-top:32px;
+  font-family:'Instrument Serif', serif; font-style:italic;
+  font-size:22px; line-height:1.4; color:var(--ink);
+  max-width:58ch;
+}
+.failures-closer em{color:var(--teal);}
+@media (max-width: 1000px){
+  .failures{grid-template-columns:1fr 1fr;}
+  .failure{border-right:none; border-bottom:1px solid var(--line);}
+  .failure:nth-child(2n){border-right:1px solid var(--line);}
+}
+
+/* ---------- systems grid ---------- */
+.systems-grid{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:20px;
+}
+.system-card{
+  grid-column: span 2;
+  background:var(--cream);
+  border:1px solid var(--line);
+  padding:32px 30px 34px;
+  display:flex; flex-direction:column;
+  transition: all .3s ease;
+  position:relative;
+  min-height:280px;
+}
+.system-card:hover{
+  border-color:var(--teal);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(15,61,62,.08);
+}
+.system-card.wide{grid-column: span 3;}
+.system-card.wider{grid-column: span 3; background: linear-gradient(135deg, var(--seaglass-2) 0%, var(--cream) 80%);}
+.system-card .ref{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.18em;
+  color:var(--muted);
+}
+.system-card h3{
+  margin-top:18px;
+  font-size:26px; font-weight:300; letter-spacing:-.01em;
+  line-height:1.15;
+}
+.system-card h3 .serif{font-size:28px; color:var(--teal);}
+.system-card p{
+  margin-top:14px;
+  font-size:14px; color:var(--ink-2); line-height:1.55;
+  max-width:38ch;
+}
+.system-card .tags{
+  margin-top:auto;
+  padding-top:24px;
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.tag-chip{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px; letter-spacing:.12em;
+  padding:5px 10px;
+  border:1px solid var(--line-2);
+  color:var(--ink-2);
+  text-transform:uppercase;
+}
+.system-card.wider .tag-chip{border-color:var(--teal); color:var(--teal);}
+.system-card .glyph{
+  position:absolute; top:22px; right:22px;
+  width:28px; height:28px; color:var(--teal); opacity:.5;
+}
+
+/* ---------- process (light, horizontal flow) ---------- */
+.process{
+  display:grid; grid-template-columns: repeat(5, 1fr);
+  gap:0;
+  position:relative;
+}
+.process::before{
+  content:"";
+  position:absolute;
+  top:74px; left:8%; right:8%;
+  height:1px;
+  background: linear-gradient(to right, transparent 0%, var(--teal) 8%, var(--teal) 92%, transparent 100%);
+  opacity:.4;
+  z-index:0;
+}
+.process-step{
+  padding:40px 22px 36px;
+  position:relative;
+  text-align:center;
+  z-index:1;
+}
+.process-step .dot-node{
+  width:18px; height:18px;
+  border-radius:50%;
+  background:var(--cream);
+  border:1.5px solid var(--teal);
+  margin:0 auto 18px;
+  position:relative;
+  transition: all .3s ease;
+}
+.process-step .dot-node::after{
+  content:"";
+  position:absolute;
+  inset:3px;
+  border-radius:50%;
+  background:var(--teal);
+  transform:scale(0);
+  transition: transform .3s ease;
+}
+.process-step:hover .dot-node{transform: scale(1.15);}
+.process-step:hover .dot-node::after{transform:scale(1);}
+.process-step .n{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px; letter-spacing:.22em;
+  color:var(--muted);
+  text-transform:uppercase;
+  font-weight:400;
+  font-style:normal;
+}
+.process-step h4{
+  font-family:'Instrument Serif', serif;
+  font-style:italic;
+  font-size:26px;
+  font-weight:400;
+  letter-spacing:-.005em;
+  margin-top:8px;
+  color:var(--teal);
+}
+.process-step p{
+  margin-top:12px;
+  font-size:13.5px; line-height:1.55;
+  color:var(--ink-2);
+  max-width:22ch;
+  margin-left:auto; margin-right:auto;
+}
+
+/* ---------- CTA ---------- */
+.cta-band{
+  padding:120px 0;
+  text-align:center;
+}
+.cta-band h2{
+  font-size:clamp(40px, 4.5vw, 68px);
+  font-weight:300;
+  line-height:1.05;
+  letter-spacing:-.015em;
+}
+.cta-band h2 .serif{color:var(--teal);}
+.cta-band p{
+  margin:24px auto 44px;
+  max-width:48ch;
+  font-size:17px;
+  color:var(--ink-2);
+  line-height:1.55;
+}
+.contact-form{
+  max-width:520px; margin:0 auto;
+  display:flex; flex-direction:column;
+  background:var(--cream);
+  border:1px solid var(--line-2);
+}
+.contact-form .field-row{
+  border-bottom:1px solid var(--line-2);
+  position:relative;
+}
+.contact-form input,
+.contact-form textarea{
+  width:100%; border:none; background:transparent;
+  padding:18px 22px;
+  font-family:inherit; font-size:15px;
+  color:var(--ink); outline:none;
+  letter-spacing:.02em; display:block;
+}
+.contact-form textarea{
+  resize:none; min-height:140px; line-height:1.55;
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder{ color:var(--muted); }
+.contact-form input[aria-invalid="true"],
+.contact-form textarea[aria-invalid="true"]{ background:rgba(180,40,40,.04); }
+.contact-form .field-error{
+  display:block;
+  padding:0 22px 10px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.06em;
+  color:#b02a1a;
+  min-height:0;
+}
+.contact-form button[type=submit]{
+  border:none;
+  background:var(--teal); color:var(--cream);
+  padding:18px 26px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+  cursor:pointer; text-align:left;
+  transition: background .3s ease;
+}
+.contact-form button[type=submit]:hover{ background:var(--ink); }
+.contact-form button[type=submit]:disabled{ opacity:.55; cursor:not-allowed; }
+.contact-success{
+  max-width:520px; margin:0 auto;
+  padding:44px 32px;
+  border:1px solid var(--teal);
+  background:rgba(158,201,194,.12);
+  text-align:center;
+  display:none;
+}
+.contact-success p{
+  font-family:'Instrument Serif', serif; font-style:italic;
+  font-size:22px; color:var(--teal); margin:0;
+}
+.contact-error-global{
+  max-width:520px; margin:0 auto 12px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.06em; color:#b02a1a;
+  min-height:0;
+}
+
+/* ---------- footer ---------- */
+.footer{
+  padding:60px 0 40px;
+  border-top:1px solid var(--line);
+  font-size:13px;
+}
+.footer-inner{
+  display:grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap:40px;
+  margin-bottom:48px;
+}
+.footer h5{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 16px;
+  font-weight:400;
+}
+.footer ul{list-style:none; padding:0; margin:0;}
+.footer ul li{margin-bottom:10px;}
+.footer ul a{color:var(--ink); text-decoration:none; font-size:14px;}
+.footer ul a:hover{color:var(--teal);}
+.footer .brand-block .brand-name{font-size:24px;}
+.footer .brand-block p{margin-top:14px; color:var(--ink-2); font-size:14px; max-width:32ch; line-height:1.5;}
+.footer-bottom{
+  display:flex; justify-content:space-between; align-items:center;
+  padding-top:24px; border-top:1px solid var(--line);
+  color:var(--muted); font-size:12px; letter-spacing:.04em;
+}
+
+/* ---------- decorative rules ---------- */
+.rule{
+  height:1px; background:var(--line);
+  margin:0 auto; max-width:100%;
+}
+
+/* responsive */
+@media (max-width: 1000px){
+  .hero-grid{grid-template-columns: 1fr; gap:40px;}
+  .squid-stage{max-width:360px; margin:0 auto;}
+  .section-head{grid-template-columns:1fr; gap:30px;}
+  .thesis{grid-template-columns:1fr;}
+  .thesis > div:first-child{border-right:none; border-bottom:1px solid var(--line);}
+  .thesis > div.thesis-mission{padding:48px 24px;}
+  .pillars, .pillars.pillars-5{grid-template-columns:1fr 1fr;}
+  .pillar{border-right:none; border-bottom:1px solid var(--line);}
+  .pillar:nth-child(2n){border-right:1px solid var(--line);}
+  .systems-grid{grid-template-columns:1fr;}
+  .system-card, .system-card.wide, .system-card.wider{grid-column: span 1;}
+  .process{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="blob b4"></div>
+</div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#">
+      <!-- Squid mark -->
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 5c-4.5 0-7.8 3-7.8 7.2 0 2.5 1 4.3 1 6.2 0 1.8-1.3 2.2-1.3 3.6 0 1.5 1.4 2.3 2.7 2.3" stroke="#0f3d3e" stroke-width="1.25" stroke-linecap="round"/>
+        <path d="M16 5c4.5 0 7.8 3 7.8 7.2 0 2.5-1 4.3-1 6.2 0 1.8 1.3 2.2 1.3 3.6 0 1.5-1.4 2.3-2.7 2.3" stroke="#0f3d3e" stroke-width="1.25" stroke-linecap="round"/>
+        <ellipse cx="16" cy="14" rx="5.2" ry="6.5" stroke="#0f3d3e" stroke-width="1.25" fill="rgba(158,201,194,0.3)"/>
+        <circle cx="14" cy="13" r="1" fill="#0f3d3e"/>
+        <circle cx="18" cy="13" r="1" fill="#0f3d3e"/>
+        <path d="M13 22c0 2 .4 4 .4 4M16 22.5c0 2 0 4.5 0 4.5M19 22c0 2-.4 4-.4 4" stroke="#0f3d3e" stroke-width="1.1" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-name">Glass Squid <em class="serif">Systems</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#founder">Founder</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn" href="#contact">Book a consultation <span class="arrow">→</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">      <div>
+        <div class="hero-kicker">
+          <span class="dot"></span>
+          <span class="eyebrow">Custom AI system design &amp; build</span>
+        </div>
+        <h1>
+          AI systems<br/>
+          <span class="serif">you can rely on.</span>
+        </h1>
+        <p class="lead">
+          Transparent, governable, and built to transform your operations.
+          Bespoke AI systems designed around your team — not retrofitted
+          templates. Every action logged, every decision traceable, every
+          cost capped.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn" href="#contact">Book a scoping call <span class="arrow">→</span></a>
+          <a class="btn ghost" href="#systems">See example systems</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</header>
+
+<!-- ============ PROBLEM / SOLUTION ============ -->
+<section class="section tight" id="approach">
+  <div class="wrap">
+    <div class="thesis">
+      <div>
+        <div class="tag">01 — The problem</div>
+        <div class="quote">Most organisations can't integrate AI because they can't trust it . As  capabilities of AI systems grow, so too do the risks of poor design and governance</div>
+        <p>
+          Off-the-shelf AI is unpredictable, opaque about its costs, and
+          silent when something goes wrong. For an NGO, an SME, or any team
+          where a bad output costs money or reputation, that's an
+          unacceptable risk.
+        </p>
+      </div>
+      <div>
+        <div class="tag">02 — The solution</div>
+        <div class="quote">
+          We build the rules, roles, and structure that turn probabilistic
+          models into <em>reliable, predictable systems.</em>
+        </div>
+        <p>
+          Reliable systems that monitor, draft, route, approve, and log —
+          every step visible, every action accountable. Each agent has a
+          scoped role, human approval sits where it matters, costs are
+          capped, and every decision is recorded. Your team stays in control;
+          the system does the work around them.
+        </p>
+      </div>
+      <div class="thesis-mission">
+        <div class="tag">03 — Our mission</div>
+        <div class="quote">
+          Every system we build is an argument that AI <em>can and must be
+          governed well.</em>
+        </div>
+        <p>
+          Reliable, auditable, human-controlled AI isn't a premium feature —
+          it's what effective, responsible deployment looks like. Glass Squid
+          exists to make governance-first design the default, not the
+          exception: through the systems we build for clients, the tools we
+          develop, and the research we contribute to the field, we're
+          committed to ensuring that the governance of AI keeps up with the
+          rate of AI progress.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PILLARS ============ -->
+<section class="section" id="principles">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Our design principles</div>
+      </div>
+      <div>
+        <h2>Five non-negotiable properties, <span class="serif">engineered in</span> from the first drawing.</h2>
+        <p class="sub" style="margin-top:22px;">
+          Not bolted on after launch.
+        </p>
+      </div>
+    </div>
+
+    <div class="pillars pillars-5">
+      <div class="pillar">
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="24" cy="24" r="18"/>
+          <path d="M24 10v14l9 5"/>
+          <circle cx="24" cy="24" r="2" fill="currentColor"/>
+        </svg>
+        <h3><span class="serif">Reliable</span></h3>
+        <p>
+          Stops one bad output becoming a bad outcome. Each agent has a scoped
+          role; verifier agents catch errors before they ship; fallbacks trigger
+          when confidence is low. No single point of failure.
+        </p>
+      </div>
+
+      <div class="pillar">
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M24 6l16 6v12c0 10-7 17-16 20-9-3-16-10-16-20V12l16-6z"/>
+          <path d="M17 24l5 5 10-11"/>
+        </svg>
+        <h3><span class="serif">Governable</span></h3>
+        <p>
+          Every decision is traceable and reviewable. Audit trails, policy-as-code,
+          and human approval gates are part of the architecture — ready for
+          internal review, regulators, and the next framework that lands.
+        </p>
+      </div>
+
+      <div class="pillar">
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="24" cy="24" r="18"/>
+          <path d="M24 13v22"/>
+          <path d="M29 18h-7a3 3 0 000 6h4a3 3 0 010 6h-7"/>
+        </svg>
+        <h3><span class="serif">Cost Effective</span></h3>
+        <p>
+          Prevents silent API cost escalation. Right-sized models per agent,
+          hard budget ceilings, and spend visible in real time — so a runaway
+          loop never becomes a surprise invoice.
+        </p>
+      </div>
+
+      <div class="pillar">
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="8" y="18" width="32" height="14" rx="2"/>
+          <path d="M14 24h4M22 24h4M30 24h4M14 28h4M22 28h4M30 28h4"/>
+          <path d="M16 18v-4M24 18v-4M32 18v-4"/>
+          <path d="M16 32v4M24 32v4M32 32v4"/>
+        </svg>
+        <h3><span class="serif">Model Agnostic</span></h3>
+        <p>
+          You own the architecture, not a dependency on one vendor. Swap models
+          per agent as the landscape shifts — without rebuilding. Yesterday's
+          best model is tomorrow's commodity; the system outlasts both.
+        </p>
+      </div>
+
+      <div class="pillar">
+        <svg class="pillar-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="24" cy="24" r="18"/>
+          <circle cx="24" cy="24" r="11"/>
+          <circle cx="24" cy="24" r="4" fill="currentColor"/>
+          <path d="M38 10L28 20"/>
+        </svg>
+        <h3><span class="serif">Outcome Driven</span></h3>
+        <p>
+          Designed against the outcome you actually need — not an AI demo.
+          We define success up front, instrument for it, and tune until the
+          system delivers the result the work requires.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY AI SYSTEMS FAIL ============ -->
+<section class="section tight" id="why-fail">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">What we've seen</div>
+      </div>
+      <div>
+        <h2>Why most AI systems<br/><span class="serif">fail in production.</span></h2>
+        <p class="sub" style="margin-top:22px;">
+          The pattern is familiar. A promising pilot ships. Six months later,
+          the team has quietly stopped using it. Here's what goes wrong.
+        </p>
+      </div>
+    </div>
+
+    <div class="failures">
+      <div class="failure">
+        <div class="x">i.</div>
+        <h4>Agents act without oversight</h4>
+        <p>No approval gates, no scope limits. One bad decision ships to production before anyone sees it.</p>
+      </div>
+      <div class="failure">
+        <div class="x">ii.</div>
+        <h4>Costs spiral silently</h4>
+        <p>A recursive loop, a runaway retry, a prompt that grew. The invoice arrives before the alarm does.</p>
+      </div>
+      <div class="failure">
+        <div class="x">iii.</div>
+        <h4>Outputs cannot be trusted</h4>
+        <p>No provenance, no verification step. Teams re-check everything by hand — and the time saved evaporates.</p>
+      </div>
+      <div class="failure">
+        <div class="x">iv.</div>
+        <h4>No audit trail exists</h4>
+        <p>When a regulator, client, or board asks "why did it do that?" — there is no answer. Only a hunch.</p>
+      </div>
+      <div class="failure">
+        <div class="x">v.</div>
+        <h4>The team abandons it</h4>
+        <p>Fragile, opaque, and unpredictable. Quietly shelved. The budget was spent; the outcome never arrived.</p>
+      </div>
+    </div>
+
+    <p class="failures-closer">
+      Glass Squid systems are designed so <em>none of this happens.</em>
+      Oversight, cost ceilings, verification, audit trails, and legibility are
+      in the architecture from day one.
+    </p>
+  </div>
+</section>
+
+<!-- ============ EXAMPLE SYSTEMS ============ -->
+<section class="section" id="systems" style="padding-top:40px;">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Systems we design</div>
+      </div>
+      <div>
+        <h2>A sample of <span class="serif">Glass Squid Systems</span></h2>
+        <p class="sub" style="margin-top:22px;">
+          Every engagement produces a bespoke system. Below are five patterns
+          we build — each one personalised, none of them a template.
+        </p>
+      </div>
+    </div>
+
+    <div class="systems-grid">
+
+      <!-- feature card (wider) -->
+      <article class="system-card wider">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/>
+        </svg>
+        <div class="ref">System · 01</div>
+        <h3>Automated research<br/>&amp; <span class="serif">event tracking</span></h3>
+        <p>
+          Monitors the sources you care about, triages signal from noise,
+          cross-references findings, and delivers a daily briefing with
+          sentence-level provenance.
+        </p>
+        <p style="margin-top:12px; color:var(--teal); font-size:13.5px;">
+          <em class="serif">Outcome —</em> analyst research time reduced by 60–80%.
+          Nothing material is missed.
+        </p>
+        <div class="tags">
+          <span class="tag-chip">Research</span>
+          <span class="tag-chip">Monitoring</span>
+          <span class="tag-chip">Briefing</span>
+        </div>
+      </article>
+
+      <!-- card wide -->
+      <article class="system-card wide">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M3 21V9l9-6 9 6v12"/><path d="M9 21V13h6v8"/>
+        </svg>
+        <div class="ref">System · 02</div>
+        <h3>Fundraising <span class="serif">pipeline</span></h3>
+        <p>
+          Identifies prospects, scores donor fit, drafts tailored outreach in
+          your tone of voice, and routes each message for human approval before
+          anything is sent.
+        </p>
+        <p style="margin-top:12px; color:var(--teal); font-size:13.5px;">
+          <em class="serif">Outcome —</em> 3–5× more qualified prospects reached,
+          compliance posture intact.
+        </p>
+        <div class="tags">
+          <span class="tag-chip">NGO</span>
+          <span class="tag-chip">Outreach</span>
+          <span class="tag-chip">Compliance</span>
+        </div>
+      </article>
+
+      <!-- standard cards -->
+      <article class="system-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 5v14"/>
+        </svg>
+        <div class="ref">System · 03</div>
+        <h3>Intelligent <span class="serif">CRM</span></h3>
+        <p>
+          Remembers every touchpoint, drafts follow-ups, and flags at-risk
+          accounts before they churn.
+        </p>
+        <p style="margin-top:12px; color:var(--teal); font-size:13.5px;">
+          <em class="serif">Outcome —</em> no lead goes cold; every handover
+          briefed.
+        </p>
+        <div class="tags">
+          <span class="tag-chip">Sales</span>
+          <span class="tag-chip">Memory</span>
+        </div>
+      </article>
+
+      <article class="system-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>
+          <path d="M10 7h4M10 17h4M7 10v4M17 10v4"/>
+        </svg>
+        <div class="ref">System · 04</div>
+        <h3>Ops <span class="serif">triage</span></h3>
+        <p>
+          Classifies inbound, routes to the right owner, resolves tier-1
+          automatically, and escalates with full context.
+        </p>
+        <p style="margin-top:12px; color:var(--teal); font-size:13.5px;">
+          <em class="serif">Outcome —</em> ~70% of tier-1 handled without a
+          human; response times cut.
+        </p>
+        <div class="tags">
+          <span class="tag-chip">Operations</span>
+          <span class="tag-chip">Triage</span>
+        </div>
+      </article>
+
+      <article class="system-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M4 20V4M4 8h10l-2 4 2 4H4"/>
+        </svg>
+        <div class="ref">System · 05</div>
+        <h3>Policy &amp; <span class="serif">regulation</span> desk</h3>
+        <p>
+          Tracks jurisdictional changes, programme rules, and donor
+          requirements; summarises impact for your operation; drafts internal
+          briefings and programme reports — every claim cited, every draft
+          reviewed.
+        </p>
+        <p style="margin-top:12px; color:var(--teal); font-size:13.5px;">
+          <em class="serif">Outcome —</em> compliance and programme teams stay
+          ahead, not behind.
+        </p>
+        <div class="tags">
+          <span class="tag-chip">NGO</span>
+          <span class="tag-chip">Policy</span>
+          <span class="tag-chip">Regulated</span>
+        </div>
+      </article>
+
+      <article class="system-card wide" style="background:var(--cream-2); display:flex; align-items:center;">
+        <div>
+          <div class="ref">Not listed above?</div>
+          <h3 style="margin-top:16px;">Bring us the <span class="serif">outcome.</span><br/>We'll bring a system.</h3>
+          <p style="margin-top:14px;">
+            If it sits in the seam between "we could do this by hand" and "we
+            wish software existed for this" — it's probably a Glass Squid
+            problem.
+          </p>
+          <a class="btn" href="#contact" style="margin-top:22px;">Start a conversation <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">&nbsp;</div>
+      </div>
+      <div>
+        <h2>How we work<br/><span class="serif">Building your custom AI System</span></h2>
+        <p class="sub" style="margin-top:22px;">
+          Every engagement follows the same careful process — shaped around
+          your desired outcomes, constraints, and needs.
+        </p>
+      </div>
+    </div>
+
+    <div class="process">
+      <div class="process-step">
+        <div class="dot-node"></div>
+        <div class="n">i · audit</div>
+        <h4>Audit</h4>
+        <p>Map the outcome, constraints, privacy posture. Decompose the work into agents, tools, and handoffs.</p>
+      </div>
+      <div class="process-step">
+        <div class="dot-node"></div>
+        <div class="n">ii · design</div>
+        <h4>Design</h4>
+        <p>Our System Design agent — built and stress-tested in-house — drafts a full topology in hours; our team challenges, refines, and signs it off.</p>
+      </div>
+      <div class="process-step">
+        <div class="dot-node"></div>
+        <div class="n">iii · build</div>
+        <h4>Build</h4>
+        <p>Implement, evaluate, red-team, tune. Every agent's scope, budget, and escalation path locked in.</p>
+      </div>
+      <div class="process-step">
+        <div class="dot-node"></div>
+        <div class="n">iv · hand off</div>
+        <h4>Hand off</h4>
+        <p>Ship with runbooks, monitoring, and training. The system stays legible to your team — not a black box.</p>
+      </div>
+      <div class="process-step">
+        <div class="dot-node"></div>
+        <div class="n">v · iterate</div>
+        <h4>Iterate</h4>
+        <p>Ongoing support as your needs evolve and AI capabilities advance. The system grows with you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOUNDER ============ -->
+<section class="section tight" id="founder">
+  <div class="wrap">
+    <div class="founder">
+      <div class="founder-portrait">
+        <div class="portrait-frame">
+          <img src="assets/founder-covi.jpg" alt="Covi Franklin, founder of Glass Squid Systems" loading="lazy"/>
+        </div>
+      </div>
+      <div class="founder-copy">
+        <div class="eyebrow" data-tweak="founderEyebrow">Founder · Covi</div>
+        <h2 style="margin-top:14px;" data-tweak-html="founderHeadline">From humanitarian operations<br/>to <span class="serif">the governance of AI.</span></h2>
+        <p class="founder-bio" data-tweak="founderBio1">
+          Covi spent five years with the United Nations World Food Programme,
+          working across policy development and emergency operations in Italy,
+          Kenya, and Sudan. In his final role, he worked within WFP's
+          technology division, coordinating implementation of emergency
+          telecommunications in Sudan — and learning first hand what it means
+          to deliver technology in environments where unexpected failures
+          weren't an option.
+        </p>
+        <p class="founder-bio" data-tweak="founderBio2">
+          That experience shaped how he thinks about AI. Organisations don't
+          fail to use technology because they lack ambition — they hold back
+          because they can't audit what it does, can't explain its decisions,
+          and can't cap what it costs. Glass Squid Systems exists to remove
+          that blocker: bespoke AI systems designed from the ground up to be
+          reliable, traceable, and owned by the teams using them.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-band">
+  <div class="wrap">
+    <h2>
+      Bring us a messy outcome.<br/>
+      <span class="serif">We'll return a system.</span>
+    </h2>
+    <p>
+      A scoping call is 30 minutes, on us. We'll listen carefully, ask the
+      sharp questions, and tell you honestly whether an agent system is the
+      right answer.
+    </p>
+    <div class="contact-success" data-fs-success>
+      <p>Thank you — we'll be in touch shortly.</p>
+    </div>
+    <div class="contact-error-global" data-fs-error></div>
+    <form class="contact-form" id="contact">
+      <div class="field-row">
+        <input type="text" name="name" placeholder="Your name" required data-fs-field/>
+        <span class="field-error" data-fs-error="name"></span>
+      </div>
+      <div class="field-row">
+        <input type="email" name="email" placeholder="your@email.com" required data-fs-field/>
+        <span class="field-error" data-fs-error="email"></span>
+      </div>
+      <div class="field-row">
+        <textarea name="message" placeholder="Tell us briefly what you're working on and the outcome you need..." required data-fs-field></textarea>
+        <span class="field-error" data-fs-error="message"></span>
+      </div>
+      <button type="submit" data-fs-submit-btn>Send message →</button>
+    </form>
+    <p style="margin-top:24px; font-size:12px; color:var(--muted); letter-spacing:.14em; text-transform:uppercase;">
+      or write directly · <a href="mailto:hello@glasssquidsystems.com" style="color:var(--muted); text-decoration:underline;">hello@glasssquidsystems.com</a>
+    </p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="brand-block">
+        <a class="brand" href="#">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="16" cy="14" rx="5.2" ry="6.5" stroke="#0f3d3e" stroke-width="1.25" fill="rgba(158,201,194,0.3)"/>
+            <circle cx="14" cy="13" r="1" fill="#0f3d3e"/>
+            <circle cx="18" cy="13" r="1" fill="#0f3d3e"/>
+            <path d="M13 22c0 2 .4 4 .4 4M16 22.5c0 2 0 4.5 0 4.5M19 22c0 2-.4 4-.4 4" stroke="#0f3d3e" stroke-width="1.1" stroke-linecap="round"/>
+          </svg>
+          <span class="brand-name">Glass Squid <em class="serif">Systems</em></span>
+        </a>
+        <p>Bespoke AI agent systems — designed from scratch to be transparent, governable, and built to deliver.</p>
+      </div>
+      <div>
+        <h5>Practice</h5>
+        <ul>
+          <li><a href="#systems">Systems</a></li>
+          <li><a href="#approach">Approach</a></li>
+          <li><a href="#process">Process</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Lab</h5>
+        <ul>
+          <li><a href="#">Frameworks</a></li>
+          <li><a href="#">Open source</a></li>
+          <li><a href="#">Writing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#contact">Book a call</a></li>
+          <li><a href="mailto:hello@glasssquidsystems.com">hello@glasssquidsystems.com</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Glass Squid Systems · London &amp; remote</span>
+      <span class="mono">Transparent · Governable · Bespoke</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ TWEAKS PANEL ============ -->
+<style>
+.tweaks-panel{
+  position:fixed; right:20px; bottom:20px;
+  width:340px; max-height:78vh;
+  background:#fbf6e8;
+  border:1px solid var(--line-2);
+  border-radius:14px;
+  box-shadow: 0 24px 60px -20px rgba(11,26,31,.35), 0 6px 20px -8px rgba(11,26,31,.25);
+  font-family:'Work Sans', sans-serif;
+  z-index:9999;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+}
+.tweaks-panel.open{display:flex;}
+.tweaks-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px;
+  background:var(--teal);
+  color:var(--cream);
+  cursor:grab;
+  user-select:none;
+}
+.tweaks-head:active{cursor:grabbing;}
+.tweaks-head h4{
+  margin:0; font-size:13px; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase;
+  font-family:'JetBrains Mono', monospace;
+}
+.tweaks-head button{
+  background:transparent; border:1px solid rgba(243,236,216,.4);
+  color:var(--cream);
+  width:24px; height:24px; border-radius:50%;
+  font-size:14px; line-height:1; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.tweaks-head button:hover{background:rgba(243,236,216,.15);}
+.tweaks-body{
+  padding:14px 16px 18px;
+  overflow-y:auto;
+  font-size:13px;
+  color:var(--ink);
+}
+.tweaks-body .group{
+  border-top:1px solid var(--line);
+  padding:14px 0 6px;
+}
+.tweaks-body .group:first-child{border-top:none; padding-top:4px;}
+.tweaks-body .group-title{
+  font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--teal-2); font-family:'JetBrains Mono', monospace;
+  margin-bottom:10px;
+}
+.tweaks-body label{
+  display:block; font-size:11px;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted); margin:10px 0 5px;
+}
+.tweaks-body input[type=text],
+.tweaks-body textarea{
+  width:100%; padding:8px 10px;
+  border:1px solid var(--line-2);
+  border-radius:6px;
+  background:#fff;
+  font-family:'Work Sans', sans-serif;
+  font-size:12px; line-height:1.5;
+  color:var(--ink);
+  resize:vertical;
+}
+.tweaks-body textarea{min-height:84px;}
+.tweaks-body input[type=range]{width:100%;}
+.tweaks-body input[type=color]{
+  width:100%; height:32px; border:1px solid var(--line-2); border-radius:6px;
+  background:#fff; cursor:pointer; padding:2px;
+}
+.tweaks-body .row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin:8px 0;
+}
+.tweaks-body .row label{margin:0; flex:1;}
+.tweaks-body .switch{
+  position:relative; width:34px; height:20px;
+  background:var(--line-2); border-radius:999px;
+  cursor:pointer; transition:background .2s;
+}
+.tweaks-body .switch.on{background:var(--teal);}
+.tweaks-body .switch::after{
+  content:""; position:absolute; top:2px; left:2px;
+  width:16px; height:16px; border-radius:50%;
+  background:#fff; transition:transform .2s;
+}
+.tweaks-body .switch.on::after{transform:translateX(14px);}
+.tweaks-body .val{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; color:var(--teal-2);
+}
+</style>
+
+<div class="tweaks-panel" id="tweaksPanel" role="dialog" aria-label="Tweaks">
+  <div class="tweaks-head" id="tweaksHead">
+    <h4>Tweaks</h4>
+    <button type="button" id="tweaksClose" aria-label="Close">×</button>
+  </div>
+  <div class="tweaks-body">
+    <div class="group">
+      <div class="group-title">Founder section</div>
+      <div class="row">
+        <label>Show section</label>
+        <div class="switch on" data-key="founderVisible"></div>
+      </div>
+      <label for="tw-founderEyebrow">Eyebrow</label>
+      <input type="text" id="tw-founderEyebrow" data-key="founderEyebrow"/>
+      <label for="tw-founderHeadline">Headline (HTML)</label>
+      <textarea id="tw-founderHeadline" data-key="founderHeadline" rows="3"></textarea>
+      <label for="tw-founderBio1">Bio paragraph 1</label>
+      <textarea id="tw-founderBio1" data-key="founderBio1" rows="6"></textarea>
+      <label for="tw-founderBio2">Bio paragraph 2</label>
+      <textarea id="tw-founderBio2" data-key="founderBio2" rows="6"></textarea>
+    </div>
+    <div class="group">
+      <div class="group-title">Palette</div>
+      <div class="row">
+        <label for="tw-teal">Primary teal</label>
+        <span class="val" id="tw-teal-val"></span>
+      </div>
+      <input type="color" id="tw-teal" data-key="primaryTeal"/>
+      <div class="row">
+        <label for="tw-cream">Cream background</label>
+        <span class="val" id="tw-cream-val"></span>
+      </div>
+      <input type="color" id="tw-cream" data-key="creamBg"/>
+    </div>
+    <div class="group">
+      <div class="group-title">Atmosphere</div>
+      <div class="row">
+        <label for="tw-ambient">Ambient haze</label>
+        <span class="val" id="tw-ambient-val"></span>
+      </div>
+      <input type="range" id="tw-ambient" data-key="ambientIntensity" min="0" max="1.4" step="0.05"/>
+      <div class="row">
+        <label for="tw-bodyFont">Body font size</label>
+        <span class="val" id="tw-bodyFont-val"></span>
+      </div>
+      <input type="range" id="tw-bodyFont" data-key="bodyFontSize" min="14" max="20" step="1"/>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const TWEAKS = /*EDITMODE-BEGIN*/{
+    "founderVisible": true,
+    "founderEyebrow": "Founder · Covi Franklin",
+    "founderHeadline": "From humanitarian operations\u003cbr\/>to \u003cspan class=\"serif\">AI governance.\u003c\/span>",
+    "founderBio1": "Covi spent five years with the United Nations World Food Programme, working across policy development and emergency operations in Italy, Kenya, and Sudan. In his final role, he worked within WFP's technology division, coordinating implementation of emergency telecommunications in Sudan — and learning first hand what it means to deliver technology in environments where unexpected failures weren't an option.",
+    "founderBio2": "That experience shaped how he thinks about AI. Organisations don't fail to use technology because they lack ambition — they hold back because they can't audit what it does, can't explain its decisions, and can't cap what it costs. Glass Squid Systems exists to remove that blocker: bespoke AI systems designed from the ground up to be reliable, traceable, and owned by the teams using them.",
+    "primaryTeal": "#0f3d3e",
+    "creamBg": "#f3ecd8",
+    "ambientIntensity": 0.85,
+    "bodyFontSize": 16
+  }/*EDITMODE-END*/;
+
+  const state = Object.assign({}, TWEAKS);
+  const panel = document.getElementById('tweaksPanel');
+  const closeBtn = document.getElementById('tweaksClose');
+
+  // --- apply functions ---
+  function hexToRgb(h){
+    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
+    return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : [15,61,62];
+  }
+  function lighten(hex, amt){
+    const [r,g,b] = hexToRgb(hex);
+    const f = (c)=> Math.max(0, Math.min(255, Math.round(c + (255-c)*amt)));
+    return `rgb(${f(r)}, ${f(g)}, ${f(b)})`;
+  }
+  function darken(hex, amt){
+    const [r,g,b] = hexToRgb(hex);
+    const f = (c)=> Math.max(0, Math.min(255, Math.round(c*(1-amt))));
+    return `rgb(${f(r)}, ${f(g)}, ${f(b)})`;
+  }
+
+  function apply(key, value){
+    state[key] = value;
+    if(key === 'founderVisible'){
+      const sec = document.getElementById('founder');
+      if(sec) sec.style.display = value ? '' : 'none';
+    }
+    if(key === 'founderEyebrow'){
+      const el = document.querySelector('[data-tweak="founderEyebrow"]');
+      if(el) el.textContent = value;
+    }
+    if(key === 'founderHeadline'){
+      const el = document.querySelector('[data-tweak-html="founderHeadline"]');
+      if(el) el.innerHTML = value;
+    }
+    if(key === 'founderBio1'){
+      const el = document.querySelector('[data-tweak="founderBio1"]');
+      if(el) el.textContent = value;
+    }
+    if(key === 'founderBio2'){
+      const el = document.querySelector('[data-tweak="founderBio2"]');
+      if(el) el.textContent = value;
+    }
+    if(key === 'primaryTeal'){
+      const root = document.documentElement;
+      root.style.setProperty('--teal', value);
+      root.style.setProperty('--teal-2', lighten(value, 0.15));
+      root.style.setProperty('--ink', darken(value, 0.55));
+      root.style.setProperty('--ink-2', darken(value, 0.4));
+      const v = document.getElementById('tw-teal-val'); if(v) v.textContent = value.toUpperCase();
+    }
+    if(key === 'creamBg'){
+      const root = document.documentElement;
+      root.style.setProperty('--cream', value);
+      root.style.setProperty('--cream-2', darken(value, 0.04));
+      root.style.setProperty('--cream-3', darken(value, 0.09));
+      const v = document.getElementById('tw-cream-val'); if(v) v.textContent = value.toUpperCase();
+    }
+    if(key === 'ambientIntensity'){
+      const amb = document.querySelector('.ambient');
+      if(amb) amb.style.opacity = String(value);
+      const v = document.getElementById('tw-ambient-val'); if(v) v.textContent = Number(value).toFixed(2);
+    }
+    if(key === 'bodyFontSize'){
+      document.body.style.fontSize = value + 'px';
+      const v = document.getElementById('tw-bodyFont-val'); if(v) v.textContent = value + 'px';
+    }
+  }
+
+  function applyAll(){
+    Object.keys(state).forEach(k => apply(k, state[k]));
+  }
+
+  function persist(key, value){
+    try{
+      window.parent.postMessage({type:'__edit_mode_set_keys', edits:{[key]: value}}, '*');
+    }catch(e){}
+  }
+
+  function hydrateInputs(){
+    document.querySelectorAll('[data-key]').forEach(el => {
+      const key = el.dataset.key;
+      const val = state[key];
+      if(el.classList && el.classList.contains('switch')){
+        el.classList.toggle('on', !!val);
+      } else if(el.tagName === 'INPUT' && el.type === 'color'){
+        el.value = val;
+      } else if(el.tagName === 'INPUT' && el.type === 'range'){
+        el.value = val;
+      } else if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
+        el.value = val;
+      }
+    });
+  }
+
+  // --- listeners ---
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if(el.classList && el.classList.contains('switch')){
+      el.addEventListener('click', () => {
+        const next = !state[key];
+        el.classList.toggle('on', next);
+        apply(key, next);
+        persist(key, next);
+      });
+    } else if(el.tagName === 'INPUT' && (el.type === 'color' || el.type === 'range')){
+      const evt = el.type === 'range' ? 'input' : 'input';
+      el.addEventListener(evt, () => {
+        const v = el.type === 'range' ? parseFloat(el.value) : el.value;
+        apply(key, v);
+      });
+      el.addEventListener('change', () => {
+        const v = el.type === 'range' ? parseFloat(el.value) : el.value;
+        persist(key, v);
+      });
+    } else if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
+      el.addEventListener('input', () => apply(key, el.value));
+      el.addEventListener('change', () => persist(key, el.value));
+    }
+  });
+
+  // --- edit mode protocol ---
+  window.addEventListener('message', (e) => {
+    const d = e.data || {};
+    if(d.type === '__activate_edit_mode'){
+      panel.classList.add('open');
+    } else if(d.type === '__deactivate_edit_mode'){
+      panel.classList.remove('open');
+    }
+  });
+  closeBtn.addEventListener('click', () => {
+    panel.classList.remove('open');
+    try{ window.parent.postMessage({type:'__edit_mode_dismissed'}, '*'); }catch(e){}
+  });
+
+  // --- drag panel ---
+  (function(){
+    const head = document.getElementById('tweaksHead');
+    let dragging = false, sx=0, sy=0, ox=0, oy=0;
+    head.addEventListener('mousedown', (e) => {
+      if(e.target.tagName === 'BUTTON') return;
+      dragging = true;
+      const r = panel.getBoundingClientRect();
+      sx = e.clientX; sy = e.clientY;
+      ox = r.left; oy = r.top;
+      panel.style.right = 'auto'; panel.style.bottom = 'auto';
+      panel.style.left = ox + 'px'; panel.style.top = oy + 'px';
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', (e) => {
+      if(!dragging) return;
+      panel.style.left = (ox + e.clientX - sx) + 'px';
+      panel.style.top  = (oy + e.clientY - sy) + 'px';
+    });
+    window.addEventListener('mouseup', () => { dragging = false; });
+  })();
+
+  // init
+  hydrateInputs();
+  applyAll();
+  try{ window.parent.postMessage({type:'__edit_mode_available'}, '*'); }catch(e){}
+})();
+</script>
+
+
+<script>
+  window.formspree = window.formspree || function(){ (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#contact', formId: 'xnjwvezl' });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
+</body>
+</html>
